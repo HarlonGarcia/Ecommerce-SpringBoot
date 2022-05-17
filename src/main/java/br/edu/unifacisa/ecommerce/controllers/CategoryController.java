@@ -5,11 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
-@RequestMapping(value="/category")
+@RequestMapping(value="/categories")
 public class CategoryController {
     @Autowired
     private CategoryService categoryService;
@@ -19,18 +18,25 @@ public class CategoryController {
         return new ResponseEntity<Category>(categoryService.createCategory(category), HttpStatus.CREATED);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteCategory(@PathVariable("id") int id) {
+        categoryService.deleteCategory(id);
+        return ResponseEntity.ok("Categoria deletada com sucesso!");
+    }
+
     @PutMapping
     public ResponseEntity<Category> editCategory(@RequestBody Category category) {
-        return new ResponseEntity<Category>(categoryService.editCategory(category), HttpStatus.OK);
+        return ResponseEntity.ok(categoryService.editCategory(category));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Category> findCategoryById(@PathVariable("id") int id) {
-        return new ResponseEntity<Category>(categoryService.findCategoryById(id), HttpStatus.OK);
+
+        return ResponseEntity.ok(categoryService.findCategoryById(id));
     }
 
     @GetMapping
     public ResponseEntity<List<Category>> findAllCategories() {
-        return new ResponseEntity<List<Category>>(categoryService.findAllCategories(), HttpStatus.OK);
+        return ResponseEntity.ok(categoryService.findAllCategories());
     }
 }

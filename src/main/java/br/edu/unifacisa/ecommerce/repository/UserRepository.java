@@ -15,16 +15,16 @@ public class UserRepository {
         users.add(user);
         return user;
     }
-    public void deleteUser(Long id) {
+    public void deleteUser(int id) {
         User user = this.findUserById(id);
         users.remove(user);
     }
     public List<User> findAllUsers() {
         return users;
     }
-    public User findUserById(Long id) {
+    public User findUserById(int id) {
         for (User user: users) {
-            if (user.getId().equals(id)) return user;
+            if (user.getId() == id) return user;
         }
         return null;
     }

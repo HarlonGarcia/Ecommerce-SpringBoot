@@ -1,10 +1,14 @@
 package br.edu.unifacisa.ecommerce.entities;
 import java.io.Serializable;
+import java.util.Objects;
+
 public class User implements Serializable {
     private static final long serialVersionUID = 2639917832277755961L;
-    private Long id;
+    private int id;
     private String username;
     private String password;
+    private String address;
+    private double balance;
 
     public User(){
     }
@@ -30,11 +34,31 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        User user = (User) object;
+        return id == user.id || Objects.equals(username, user.username);
     }
 }

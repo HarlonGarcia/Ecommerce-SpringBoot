@@ -15,6 +15,10 @@ public class CategoryRepository {
         categories.add(category);
         return category;
     }
+    public void deleteCategory(Category category) {
+        categories.remove(category);
+    }
+
     public Category findCategoryById(int id) {
         for (Category category: categories) {
             if (category.getId() == (id)) return category;

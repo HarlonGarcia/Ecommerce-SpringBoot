@@ -14,12 +14,19 @@ public class CategoryService {
     public Category createCategory(Category category) {
         return categoryRepository.addNewCategory(category);
     }
+
+    public void deleteCategory(int id) {
+        Category categoryToDelete = categoryRepository.findCategoryById(id);
+        categoryRepository.deleteCategory(categoryToDelete);
+    }
+
     public Category editCategory(Category category) {
         Category categoryUpdated = categoryRepository.findCategoryById(category.getId());
         categoryUpdated.setName(category.getName());
         categoryUpdated.setDescription(category.getDescription());
         return categoryUpdated;
     }
+
     public Category findCategoryById(int id) {
         return categoryRepository.findCategoryById(id);
     }
