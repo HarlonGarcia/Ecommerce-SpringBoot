@@ -17,6 +17,16 @@ public class ProductRepository {
         products.add(product);
         return product;
     }
+
+    public Product findById(int id) {
+        for (Product product: products) {
+            if (product.getId() == id) {
+                return product;
+            }
+        }
+        return null;
+    }
+
     public List<Product> findAllProducts() {
         return products;
     }

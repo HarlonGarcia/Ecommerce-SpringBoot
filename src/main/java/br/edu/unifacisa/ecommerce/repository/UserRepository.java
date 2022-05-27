@@ -1,4 +1,5 @@
 package br.edu.unifacisa.ecommerce.repository;
+
 import br.edu.unifacisa.ecommerce.entities.User;
 import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
@@ -6,25 +7,28 @@ import java.util.List;
 
 @Repository
 public class UserRepository {
-    private List<User> users;
+    private final List<User> users;
 
     public UserRepository(){
         this.users = new ArrayList<>();
     }
-    public User addNewUser(User user) {
-        users.add(user);
-        return user;
+
+    public void addNewUser(User user) {
+        User userAdded = new User(user.getUsername(), user.getPassword(), user.getAddress(), user.getUserType());
+        users.add(userAdded);
     }
-    public void deleteUser(int id) {
-        User user = this.findUserById(id);
+
+    public void deleteUser(User user) {
         users.remove(user);
     }
-    public List<User> findAllUsers() {
+
+    public List<User> findAll() {
         return users;
     }
-    public User findUserById(int id) {
+
+    public User findByUsername(String username) {
         for (User user: users) {
-            if (user.getId() == id) return user;
+            if (username.equals(user.getUsername())) return user;
         }
         return null;
     }

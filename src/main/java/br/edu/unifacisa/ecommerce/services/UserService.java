@@ -1,6 +1,8 @@
 package br.edu.unifacisa.ecommerce.services;
+
 import br.edu.unifacisa.ecommerce.entities.User;
 import br.edu.unifacisa.ecommerce.exceptions.UserAlreadyExistsException;
+import br.edu.unifacisa.ecommerce.exceptions.ContentNotFoundException;
 import br.edu.unifacisa.ecommerce.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +14,7 @@ public class UserService {
     private UserRepository userRepository;
 
     public void createUser(User user) throws UserAlreadyExistsException {
-        if (verifyUser(user)) {
+        if (checkUserExistence(user.getUsername())) {
             userRepository.addNewUser(user);
         } else {
             throw new UserAlreadyExistsException();
@@ -20,42 +22,51 @@ public class UserService {
     }
 
     public User editUser(User user) {
-        User userUpdated = userRepository.findUserById(user.getId());
+        User userUpdated = userRepository.findByUsername(user.getUsername());
         userUpdated.setUsername(user.getUsername());
         userUpdated.setPassword(user.getPassword());
         userUpdated.setAddress(user.getAddress());
         return userUpdated;
     }
 
-    public void deleteUser(int id) {
-        userRepository.deleteUser(id);
+    public boolean deleteUser(String username) throws ContentNotFoundException {
+        if (!checkUserExistence(username)) {
+            userRepository.deleteUser(findByUsername(username));
+            return true;
+        }
+        throw new ContentNotFoundException("User not found.");
     }
 
-    public String getAddress(int id) {
-        User user = userRepository.findUserById(id);
-        return user.getAddress();
-    }
-
-    public double getBalance(int id) {
-        User user = userRepository.findUserById(id);
-        return user.getBalance();
-    }
-
-    public boolean verifyUser(User user) throws UserAlreadyExistsException {
-        List<User> allUsers = userRepository.findAllUsers();
+    public boolean checkUserExistence(String username) {
+        List<User> allUsers = userRepository.findAll();
         for (User userToVerify: allUsers) {
-            if (userToVerify.equals(user)) {
+            if (userToVerify.getUsername().equals(username)) {
                 return false;
             }
         }
         return true;
     }
 
-    public List<User> findAllUsers() {
-        return userRepository.findAllUsers();
+    public boolean checkUserType(String username, int userType) {
+        User user = userRepository.findByUsername(username);
+        List<User> allUsers = userRepository.findAll();
+        for (User userToVerify: allUsers) {
+            if (userToVerify.getUserType() == userType && userToVerify.getUsername().equals(username)) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    public User findUserById(int id) {
-        return userRepository.findUserById(id);
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
+    public User findByUsername(String username) throws ContentNotFoundException {
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            return userRepository.findByUsername(username);
+        }
+        throw new ContentNotFoundException("User not found.");
     }
 }

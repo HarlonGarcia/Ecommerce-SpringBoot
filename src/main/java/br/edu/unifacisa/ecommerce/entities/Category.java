@@ -1,11 +1,14 @@
 package br.edu.unifacisa.ecommerce.entities;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Category implements Serializable {
     private static final long serialVersionUID = -8588157270452675140L;
     private int id;
     private String name;
     private String description;
+    private List<Product> products;
 
     public Category() {
     }
@@ -13,6 +16,7 @@ public class Category implements Serializable {
     public Category(String name, String description) {
         this.name = name;
         this.description = description;
+        this.products = new ArrayList<>();
     }
     public int getId() {
         return id;

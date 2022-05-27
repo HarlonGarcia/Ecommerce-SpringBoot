@@ -1,6 +1,9 @@
 package br.edu.unifacisa.ecommerce.controllers;
+
+import br.edu.unifacisa.ecommerce.dto.UserDto;
 import br.edu.unifacisa.ecommerce.entities.User;
 import br.edu.unifacisa.ecommerce.exceptions.UserAlreadyExistsException;
+import br.edu.unifacisa.ecommerce.exceptions.ContentNotFoundException;
 import br.edu.unifacisa.ecommerce.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,10 +17,26 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    /*
+    Não retorna DTO, pois apenas usuários
+    com permissão de ADMIN deverão ter
+    acesso a lista de todos os usuários
+     */
     @GetMapping
-    public ResponseEntity<List<User>> findAllUsers() {
-        return new ResponseEntity<List<User>>(userService.findAllUsers(), HttpStatus.OK);
+    public ResponseEntity<List<User>> findAll() {
+        return new ResponseEntity<List<User>>(userService.findAll(), HttpStatus.OK);
     };
+
+    @GetMapping("/{username}")
+    public ResponseEntity<UserDto> findByUsername(@PathVariable("username") String username) {
+        try {
+            User user = userService.findByUsername(username);
+            UserDto userDto = user.toDto();
+            return new ResponseEntity<UserDto>(userDto, HttpStatus.OK);
+        } catch (ContentNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
     @PostMapping
     public ResponseEntity<String> createUser(@RequestBody User user) {
@@ -30,32 +49,18 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<User> editUser(@RequestBody User user) {
-        return new ResponseEntity<User>(userService.editUser(user), HttpStatus.OK);
+    public ResponseEntity<UserDto> editUser(@RequestBody User user) {
+        UserDto userDto = userService.editUser(user).toDto();
+        return new ResponseEntity<UserDto>(userDto, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable("id") int id) {
-        userService.deleteUser(id);
-        return new ResponseEntity<String>("O usuário foi deletado com sucesso!", HttpStatus.OK);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<User> findUserById(@PathVariable("id") int id) {
-        return new ResponseEntity<User>(userService.findUserById(id), HttpStatus.OK);
-    }
-
-    @GetMapping("/{id}/balance")
-    public ResponseEntity<String> getBalance(@PathVariable("id") int id) {
-        return ResponseEntity.ok("Your balance: " + userService.getBalance(id));
-    }
-
-    public ResponseEntity<String> getAddress(@PathVariable("id") int id) {
-        return ResponseEntity.ok(userService.getAddress(id));
-    }
-
-    @GetMapping("/status")
-    public String checkStatus() {
-        return "Online";
+    @DeleteMapping("/{username}")
+    public ResponseEntity<String> deleteUser(@PathVariable("username") String username) {
+        try {
+            userService.deleteUser(username);
+        } catch (ContentNotFoundException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<String>("User was deleted!", HttpStatus.OK);
     }
 }
