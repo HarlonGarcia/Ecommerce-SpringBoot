@@ -1,4 +1,5 @@
 package br.edu.unifacisa.ecommerce.repository;
+
 import br.edu.unifacisa.ecommerce.entities.Category;
 import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class CategoryRepository {
         }
         return null;
     }
-    public List<Category> findAllCategories() {
+    public List<Category> findAll() {
         return categories;
     }
 }

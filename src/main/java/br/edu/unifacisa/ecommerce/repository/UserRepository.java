@@ -14,8 +14,7 @@ public class UserRepository {
     }
 
     public void addNewUser(User user) {
-        User userAdded = new User(user.getUsername(), user.getPassword(), user.getAddress(), user.getUserType());
-        users.add(userAdded);
+        users.add(user);
     }
 
     public void deleteUser(User user) {

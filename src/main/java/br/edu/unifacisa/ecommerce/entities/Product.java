@@ -1,30 +1,38 @@
 package br.edu.unifacisa.ecommerce.entities;
+import br.edu.unifacisa.ecommerce.dto.ProductDto;
+
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.UUID;
 
 public class Product implements Serializable {
     private static final long serialVersionUID = -1386366526672841108L;
-    private int id;
+    private String id;
     private String name;
     private double price;
     private String description;
     private int category_id;
 
     public Product() {
+        this.id = UUID.randomUUID().toString().replace("-","").substring(0,8);
     }
 
-    public Product(int id, String name, double price, String description, int category_id) {
-        this.id = id;
+    public Product(String name, double price, String description, int category_id) {
+        this.id = UUID.randomUUID().toString().replace("-","").substring(0,8);
         this.name = name;
         this.price = price;
         this.description = description;
     }
 
-    public int getId() {
+    public ProductDto toDto() {
+        return new ProductDto(getId(), getName(), getPrice(), getDescription());
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -65,7 +73,7 @@ public class Product implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return getId() == product.getId() && getCategory_id() == product.getCategory_id();
+        return getId().equals(product.getId()) && getCategory_id() == product.getCategory_id();
     }
 
     @Override

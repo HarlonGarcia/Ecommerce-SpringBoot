@@ -15,32 +15,30 @@ public class User implements Serializable {
     private String address;
     private double balance;
     private UserType userType;
+    private Cart userCart = new Cart();
     private List<String> userOrders = new ArrayList<>();
 
     public User(){
     }
 
-    public User(String username, String password, String address, int userCode){
+    public User(String username, String password, String address, UserType userType){
         this.token = "";
         this.username = username;
         this.password = password;
         this.address = address;
-        this.userType = UserType.valueOf(userCode);
+        this.userType = userType;
     }
 
     public UserDto toDto() {
-        String usernameDto = getUsername();
-        String addressDto = getAddress();
-        double balanceDto = getBalance();
-        return new UserDto(usernameDto, addressDto, balanceDto);
+        return new UserDto(getUsername(), getAddress(), getBalance());
     }
 
     public void setUserType(int userCode) {
         this.userType = UserType.valueOf(userCode);
     }
 
-    public int getUserType() {
-        return userType.getCode();
+    public UserType getUserType() {
+        return userType;
     }
 
     public String getUsername() {
@@ -100,6 +98,10 @@ public class User implements Serializable {
         if (this == userUnchecked) return true;
         if (userUnchecked == null || getClass() != userUnchecked.getClass()) return false;
         User user = (User) userUnchecked;
-        return Objects.equals(username, user.username) && ((User) userUnchecked).getUserType() == userType.getCode();
+        return Objects.equals(username, user.username) && ((User) userUnchecked).getUserType() == userType;
+    }
+
+    public Cart getCart() {
+        return userCart;
     }
 }

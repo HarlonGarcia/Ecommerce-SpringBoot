@@ -37,6 +37,6 @@ public class CategoryController {
 
     @GetMapping
     public ResponseEntity<List<Category>> findAllCategories() {
-        return ResponseEntity.ok(categoryService.findAllCategories());
+        return ResponseEntity.ok(categoryService.findAll());
     }
 }

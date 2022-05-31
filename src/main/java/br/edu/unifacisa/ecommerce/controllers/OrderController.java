@@ -15,17 +15,17 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @GetMapping
-    public ResponseEntity<List<Order>> findAll() {
-        return new ResponseEntity<List<Order>>(orderService.findAll(), HttpStatus.OK);
-    }
-
     @PostMapping
     public ResponseEntity<String> placeAnOrder(@RequestBody Order order) {
         try {
-            return new ResponseEntity<String>("Order placed with success by " + orderService.placeAnOrder(order) + "!", HttpStatus.CREATED);
+            String message = orderService.placeAnOrder(order);
+            return new ResponseEntity<String>("Order placed successfully by " + message + "!", HttpStatus.CREATED);
         } catch (ContentNotFoundException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
+    }
+    @GetMapping
+    public ResponseEntity<List<Order>> findAll() {
+        return new ResponseEntity<List<Order>>(orderService.findAll(), HttpStatus.OK);
     }
 }
